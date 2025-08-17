@@ -64,7 +64,7 @@ def linear_schedule(
 
 
 def make_env(
-    env_id: str, seed: int, idx: int, capture_video: bool, run_name: str, video_log_freq: int = 25
+    env_id: str, seed: int, capture_video: bool, idx: int, run_name: str, video_log_freq: int = 25
 ):
     """Return a function that returns an environment after setting up boilerplate."""
 

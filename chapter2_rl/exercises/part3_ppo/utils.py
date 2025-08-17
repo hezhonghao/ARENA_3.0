@@ -102,3 +102,49 @@ def arg_help(args, print_df=False):
         )
         with pd.option_context("max_colwidth", 0):
             display(s)
+
+
+#NEP Aug 11 2025 I copied this from a deleted historical commit 
+# https://github.com/callummcdougall/ARENA_3.0/commit/f25c7189c5f696fcebc1e267c88d1ea57d584118#diff-221a44b99bef5949898cd22e57fb557d01e032bd8e6f56e3030f99551bf4f74a
+# Temporarily not using it since it's seem in the original repo they copied make_env from part2 isntead 
+def make_env(
+    env_id: str,
+    seed: int,
+    idx: int,
+    run_name: str,
+    mode: str = "classic-control",
+    capture_video_every_n_episodes: int = None,
+    video_save_path: str = None,
+    **kwargs,
+):
+    """
+    Return a function that returns an environment after setting up boilerplate.
+    """
+
+    # if capture_video_every_n_steps is None:
+    #     video_log_freq = {"classic-control": 100, "atari": 30, "mujoco": 50}[mode]
+    #     video_log_freq_step = {"classic-control": 2_000}[mode]
+
+    def thunk():
+        env = gym.make(env_id, render_mode="rgb_array")
+        env = gym.wrappers.RecordEpisodeStatistics(env)
+        if idx == 0 and capture_video_every_n_episodes:
+            env = gym.wrappers.RecordVideo(
+                env,
+                f"{video_save_path}/{run_name}",
+                # use_wandb=use_wandb,
+                episode_trigger=lambda episode_id: episode_id % capture_video_every_n_episodes == 0,
+                disable_logger=True,
+            )
+
+        if mode == "atari":
+            env = prepare_atari_env(env)
+        elif mode == "mujoco":
+            env = prepare_mujoco_env(env)
+
+        env.reset(seed=seed)
+        env.action_space.seed(seed)
+        env.observation_space.seed(seed)
+        return env
+
+    return thunk

@@ -166,7 +166,6 @@ def make_env(
 
     return thunk
 
-
 class NoopResetEnv(gym.Wrapper):
     def __init__(self, env, noop_max=30):
         """Sample initial states by taking random number of no-ops on reset.
