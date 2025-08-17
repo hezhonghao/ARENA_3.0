@@ -13,7 +13,9 @@ device = t.device(
 )
 Arr = np.ndarray
 
-from part3_ppo.utils import make_env
+#from part1_intro_to_rl.utils import make_env
+from part2_q_learning_and_dqn.utils import make_env
+# from part3_ppo.utils import make_env #NEP Aug 10 They didn't set up a function for part3, so i am temporarily using part2's
 
 
 def get_steps(obj):
